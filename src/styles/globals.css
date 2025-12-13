@@ -102,3 +102,168 @@ body {
         padding: 16px;
     }
 }
+
+/* ===== Auth (/signin) ===== */
+.auth {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+}
+
+.auth__card {
+    width: min(980px, 100%);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: 22px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.04);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.auth__panel {
+    padding: 26px;
+}
+
+.auth__panel--info {
+    position: relative;
+    background: radial-gradient(1200px 600px at 0% 0%, rgba(255,42,109,0.25), transparent 60%),
+    radial-gradient(800px 500px at 70% 30%, rgba(120,80,255,0.18), transparent 55%);
+}
+
+.auth__brand {
+    margin: 0 0 10px;
+    font-size: 34px;
+    letter-spacing: 1px;
+    color: #ff2a6d;
+}
+
+.auth__desc {
+    margin: 0 0 18px;
+    color: rgba(255,255,255,0.85);
+    line-height: 1.5;
+}
+
+.auth__tip {
+    margin-top: 22px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    background: rgba(255,255,255,0.06);
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.10);
+}
+.auth__tip span { color: rgba(255,255,255,0.55); margin-right: 6px; }
+
+.auth__switch {
+    margin-top: 10px;
+}
+
+.auth__panel--form {
+    background: rgba(0,0,0,0.18);
+    backdrop-filter: blur(10px);
+}
+
+/* Tabs */
+.auth__tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+.tab {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.85);
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease;
+}
+.tab:hover { transform: translateY(-1px); background: rgba(255,255,255,0.08); }
+.tab.active { background: rgba(255,255,255,0.12); color: #fff; }
+
+/* Form */
+.auth__form {
+    display: grid;
+    gap: 12px;
+}
+
+.field span {
+    display: block;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 6px;
+}
+.field input {
+    width: 100%;
+    padding: 12px 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    outline: none;
+    transition: border 0.2s ease, transform 0.2s ease;
+}
+.field input:focus {
+    border-color: rgba(255,42,109,0.55);
+    transform: translateY(-1px);
+}
+
+.row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.check {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+}
+.check input { transform: translateY(1px); }
+
+.actions {
+    margin-top: 8px;
+}
+
+/* Buttons */
+.btn--primary {
+    width: 100%;
+    font-weight: 700;
+}
+.btn--ghost {
+    background: rgba(255,255,255,0.06);
+}
+
+/* Link text */
+.link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #ff2a6d;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+/* ===== 전환 애니메이션(필수) ===== */
+/* 카드 자체를 살짝 움직이고 blur/opacity로 전환 느낌 */
+.auth__card {
+    transition: transform 0.45s ease, filter 0.45s ease;
+}
+.auth__card.is-register {
+    transform: translateX(-8px);
+    filter: saturate(1.05);
+}
+.auth__card.is-login {
+    transform: translateX(8px);
+}
+
+/* 모바일 */
+@media (max-width: 860px) {
+    .auth__card {
+        grid-template-columns: 1fr;
+    }
+}
