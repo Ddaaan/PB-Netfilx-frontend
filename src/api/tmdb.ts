@@ -46,3 +46,15 @@ export const tmdb = {
     // (다음 단계에서 사용) 검색
     search: (query: string, page = 1) => get<TmdbListResponse>("/search/movie", { query, page, include_adult: false }),
 };
+
+export type Genre = {
+    id: number;
+    name: string;
+};
+
+export const tmdbExtra = {
+    genres: async (): Promise<Genre[]> => {
+        const res = await get<{ genres: Genre[] }>("/genre/movie/list");
+        return res.genres;
+    },
+};
