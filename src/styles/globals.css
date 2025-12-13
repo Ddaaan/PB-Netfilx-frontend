@@ -388,3 +388,19 @@ body {
     border: 1px solid rgba(255,255,255,0.2);
     color: #fff;
 }
+
+/* ===== Search ===== */
+.search__filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.search__filters input,
+.search__filters select {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+}
