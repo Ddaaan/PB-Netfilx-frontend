@@ -42,3 +42,13 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
     }
     return <>{children}</>;
 }
+
+export function restoreSessionFromStorage() {
+    const keepLogin = storage.get<boolean>("keepLogin", false);
+    if (!keepLogin) return;
+
+    const user = storage.get<User | null>("loginUser", null);
+    if (user?.password) {
+        localStorage.setItem("TMDb-Key", user.password);
+    }
+}
