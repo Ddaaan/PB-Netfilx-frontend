@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { storage } from "../utils/storage";
-import { getLoginUser, setLoginUser, User } from "../utils/auth";
+import { getLoginUser, setLoginUser } from "../utils/auth";
+import type { User } from "../utils/auth";
 
 type Mode = "login" | "register";
 
