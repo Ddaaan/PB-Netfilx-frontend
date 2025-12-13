@@ -5,14 +5,11 @@ import type { TmdbMovie } from "../api/tmdb";
 import { tmdbExtra, type Genre } from "../api/tmdb";
 import { useWishlist } from "../hooks/useWishlist";
 
-type Sort = "popularity.desc" | "vote_average.desc" | "release_date.desc";
-
 export default function SearchPage() {
     const [query, setQuery] = useState("");
     const [genres, setGenres] = useState<Genre[]>([]);
     const [genreId, setGenreId] = useState<number | "">("");
     const [minVote, setMinVote] = useState<number>(0);
-    const [sortBy, setSortBy] = useState<Sort>("popularity.desc");
 
     const [items, setItems] = useState<TmdbMovie[]>([]);
     const [loading, setLoading] = useState(false);
@@ -52,7 +49,6 @@ export default function SearchPage() {
         setQuery("");
         setGenreId("");
         setMinVote(0);
-        setSortBy("popularity.desc");
         setItems([]);
     };
 

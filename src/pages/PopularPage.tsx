@@ -106,13 +106,28 @@ export default function PopularPage() {
                     </div>
 
                     <div className="pager">
-                        <button className="btn" disabled={page <= 1} onClick={() => fetchPage(page - 1, true) && setPage(page - 1)}>
+                        <button
+                            className="btn"
+                            disabled={page <= 1}
+                            onClick={() => {
+                                fetchPage(page - 1, true);
+                                setPage(page - 1);
+                            }}
+                        >
                             이전
                         </button>
-                        <span>{page} / {totalPages}</span>
-                        <button className="btn" disabled={page >= totalPages} onClick={() => fetchPage(page + 1, true) && setPage(page + 1)}>
+
+                        <button
+                            className="btn"
+                            disabled={page >= totalPages}
+                            onClick={() => {
+                                fetchPage(page + 1, true);
+                                setPage(page + 1);
+                            }}
+                        >
                             다음
                         </button>
+
                     </div>
                 </>
             )}

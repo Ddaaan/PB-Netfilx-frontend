@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { storage } from "../utils/storage";
@@ -28,8 +28,6 @@ export default function SignInPage() {
     const [agree, setAgree] = useState(false);
     const [rememberEmail, setRememberEmail] = useState(false);
     const [keepLogin, setKeepLogin] = useState(false);
-
-    const users = useMemo<User[]>(() => storage.get<User[]>("users", []), []);
 
     // 이미 로그인되어 있으면 바로 이동
     useEffect(() => {
