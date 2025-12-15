@@ -114,11 +114,11 @@ export default function SignInPage() {
 
                     <div className="auth__switch">
                         {mode === "login" ? (
-                            <button className="btn btn--ghost" onClick={() => toggleMode("register")}>
+                            <button className="btn btn--ghost" type="button" onClick={() => toggleMode("register")}>
                                 회원가입으로 전환
                             </button>
                         ) : (
-                            <button className="btn btn--ghost" onClick={() => toggleMode("login")}>
+                            <button className="btn btn--ghost" type="button" onClick={() => toggleMode("login")}>
                                 로그인으로 전환
                             </button>
                         )}
@@ -133,12 +133,14 @@ export default function SignInPage() {
                 <section className="auth__panel auth__panel--form">
                     <div className="auth__tabs">
                         <button
+                            type="button"
                             className={`tab ${mode === "login" ? "active" : ""}`}
                             onClick={() => toggleMode("login")}
                         >
                             로그인
                         </button>
                         <button
+                            type="button"
                             className={`tab ${mode === "register" ? "active" : ""}`}
                             onClick={() => toggleMode("register")}
                         >
@@ -209,11 +211,11 @@ export default function SignInPage() {
 
                         <div className="actions">
                             {mode === "login" ? (
-                                <button className="btn btn--primary" onClick={handleLogin}>
+                                <button className="btn btn--primary" type="button" onClick={handleLogin}>
                                     로그인
                                 </button>
                             ) : (
-                                <button className="btn btn--primary" onClick={handleRegister}>
+                                <button className="btn btn--primary" type="button" onClick={handleRegister}>
                                     회원가입
                                 </button>
                             )}
@@ -221,7 +223,7 @@ export default function SignInPage() {
 
                         <p className="auth__foot">
                             {mode === "login" ? "계정이 없으신가요?" : "이미 계정이 있으신가요?"}{" "}
-                            <button className="link" onClick={() => toggleMode(mode === "login" ? "register" : "login")}>
+                            <button className="link" type="button" onClick={() => toggleMode(mode === "login" ? "register" : "login")}>
                                 {mode === "login" ? "회원가입" : "로그인"}하기
                             </button>
                         </p>

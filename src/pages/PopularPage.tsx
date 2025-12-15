@@ -3,8 +3,10 @@ import toast from "react-hot-toast";
 import { posterUrl, tmdb } from "../api/tmdb";
 import type { TmdbMovie } from "../api/tmdb";
 import { useWishlist } from "../hooks/useWishlist";
+import { useLockScroll } from "../hooks/useLockScroll";
 
 type ViewMode = "table" | "infinite";
+const TABLE_PAGE_SIZE = 8;
 
 export default function PopularPage() {
     const [mode, setMode] = useState<ViewMode>("infinite");
@@ -16,12 +18,15 @@ export default function PopularPage() {
     const { isWished, toggle } = useWishlist();
     const sentinelRef = useRef<HTMLDivElement | null>(null);
 
+    useLockScroll(mode === "table");
+
     const fetchPage = async (p: number, replace = false) => {
         try {
             setLoading(true);
             const res = await tmdb.popular(p);
             setTotalPages(res.total_pages);
-            setItems((prev) => (replace ? res.results : [...prev, ...res.results]));
+            const processed = mode === "table" ? res.results.slice(0, TABLE_PAGE_SIZE) : res.results;
+            setItems((prev) => (replace ? processed : [...prev, ...processed]));
         } catch (e: any) {
             toast.error(e?.message || "인기 영화를 불러오지 못했습니다.");
         } finally {
@@ -29,7 +34,6 @@ export default function PopularPage() {
         }
     };
 
-    // 모드/페이지 초기화
     useEffect(() => {
         setItems([]);
         setPage(1);
@@ -37,7 +41,6 @@ export default function PopularPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode]);
 
-    // Infinite Scroll
     useEffect(() => {
         if (mode !== "infinite") return;
         const el = sentinelRef.current;
@@ -60,18 +63,30 @@ export default function PopularPage() {
 
     const goTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
+    const changePage = (next: number) => {
+        const safe = Math.min(Math.max(next, 1), totalPages);
+        if (safe === page) return;
+        setPage(safe);
+        fetchPage(safe, true);
+    };
+
     return (
         <div>
             <div className="popular__head">
-                <h1>대세 콘텐츠</h1>
+                <div>
+                    <h1>대세 콘텐츠</h1>
+                    <p className="popular__sub">테이블/무한 스크롤 뷰를 선택해 TMDB 인기 영화를 탐색하세요.</p>
+                </div>
                 <div className="popular__actions">
                     <button
+                        type="button"
                         className={`btn ${mode === "table" ? "btn--primary" : ""}`}
                         onClick={() => setMode("table")}
                     >
                         Table View
                     </button>
                     <button
+                        type="button"
                         className={`btn ${mode === "infinite" ? "btn--primary" : ""}`}
                         onClick={() => setMode("infinite")}
                     >
@@ -80,59 +95,71 @@ export default function PopularPage() {
                 </div>
             </div>
 
-            {/* Table View */}
             {mode === "table" && (
                 <>
-                    <div className="grid">
-                        {items.map((m) => {
-                            const img = posterUrl(m.poster_path, "w342");
-                            return (
-                                <button
-                                    key={m.id}
-                                    className={`movieCard ${isWished(m.id) ? "is-wished" : ""}`}
-                                    onClick={() =>
-                                        toggle({ id: m.id, title: m.title, poster_path: posterUrl(m.poster_path, "w342") })
-                                    }
-                                >
-                                    <div className="movieCard__poster">
-                                        {img ? <img src={img} alt={m.title} /> : <div className="movieCard__empty" />}
-                                    </div>
-                                    <div className="movieCard__meta">
-                                        <div className="movieCard__name">{m.title}</div>
-                                    </div>
-                                </button>
-                            );
-                        })}
+                    <div className="popular__tableWrapper">
+                        <table className="popular__table">
+                            <thead>
+                                <tr>
+                                    <th>포스터</th>
+                                    <th>제목</th>
+                                    <th>평균 평점</th>
+                                    <th>개봉일</th>
+                                    <th>상태</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {items.map((m) => {
+                                    const img = posterUrl(m.poster_path, "w185");
+                                    return (
+                                        <tr key={m.id}>
+                                            <td>
+                                                <button
+                                                    type="button"
+                                                    className={`movieThumb ${isWished(m.id) ? "is-wished" : ""}`}
+                                                    onClick={() =>
+                                                        toggle({
+                                                            id: m.id,
+                                                            title: m.title,
+                                                            poster_path: posterUrl(m.poster_path, "w342"),
+                                                        })
+                                                    }
+                                                >
+                                                    {img ? <img src={img} alt={m.title} /> : <span>이미지 없음</span>}
+                                                </button>
+                                            </td>
+                                            <td>{m.title}</td>
+                                            <td>{m.vote_average ? m.vote_average.toFixed(1) : "-"}</td>
+                                            <td>{m.release_date ?? "-"}</td>
+                                            <td>{isWished(m.id) ? "추천됨" : "찜하기"}</td>
+                                        </tr>
+                                    );
+                                })}
+                                {items.length === 0 && (
+                                    <tr>
+                                        <td colSpan={5} style={{ textAlign: "center", opacity: 0.7 }}>
+                                            데이터를 불러오는 중입니다.
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
 
                     <div className="pager">
-                        <button
-                            className="btn"
-                            disabled={page <= 1}
-                            onClick={() => {
-                                fetchPage(page - 1, true);
-                                setPage(page - 1);
-                            }}
-                        >
-                            이전
+                        <button className="btn" type="button" disabled={page <= 1} onClick={() => changePage(page - 1)}>
+                            이전 페이지
                         </button>
-
-                        <button
-                            className="btn"
-                            disabled={page >= totalPages}
-                            onClick={() => {
-                                fetchPage(page + 1, true);
-                                setPage(page + 1);
-                            }}
-                        >
-                            다음
+                        <span className="pager__page">
+                            {page} / {totalPages}
+                        </span>
+                        <button className="btn" type="button" disabled={page >= totalPages} onClick={() => changePage(page + 1)}>
+                            다음 페이지
                         </button>
-
                     </div>
                 </>
             )}
 
-            {/* Infinite Scroll */}
             {mode === "infinite" && (
                 <>
                     <div className="grid">
@@ -140,6 +167,7 @@ export default function PopularPage() {
                             const img = posterUrl(m.poster_path, "w342");
                             return (
                                 <button
+                                    type="button"
                                     key={m.id}
                                     className={`movieCard ${isWished(m.id) ? "is-wished" : ""}`}
                                     onClick={() =>
@@ -151,6 +179,9 @@ export default function PopularPage() {
                                     </div>
                                     <div className="movieCard__meta">
                                         <div className="movieCard__name">{m.title}</div>
+                                        <div className="movieCard__desc">
+                                            {m.overview ? m.overview.slice(0, 60) + "..." : "상세 설명 없음"}
+                                        </div>
                                     </div>
                                 </button>
                             );
@@ -159,10 +190,11 @@ export default function PopularPage() {
 
                     {loading && <p style={{ opacity: 0.7, marginTop: 12 }}>Loading...</p>}
                     <div ref={sentinelRef} />
+                    <button className="toTop" type="button" onClick={goTop}>
+                        Top
+                    </button>
                 </>
             )}
-
-            <button className="toTop" onClick={goTop}>Top</button>
         </div>
     );
 }

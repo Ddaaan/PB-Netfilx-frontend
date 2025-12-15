@@ -23,7 +23,13 @@ body {
     background: rgba(11, 11, 15, 0.75);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    transition: background 0.25s ease;
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.header.is-scrolled {
+    background: rgba(11, 11, 15, 0.92);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    transform: translateY(-2px);
 }
 
 .header__left {
@@ -61,6 +67,21 @@ body {
 .nav__item.active {
     color: #fff;
     background: rgba(255,255,255,0.14);
+}
+
+.page {
+    animation: pageFade 0.45s ease;
+}
+
+@keyframes pageFade {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .header__right {
@@ -284,6 +305,7 @@ body {
 }
 
 .card {
+    display: block;
     border-radius: 16px;
     overflow: hidden;
     background: rgba(255,255,255,0.05);
@@ -292,6 +314,21 @@ body {
 }
 .card:hover {
     transform: translateY(-4px) scale(1.03);
+}
+.card--wishlist {
+    border: none;
+    background: rgba(255,255,255,0.05);
+    color: inherit;
+    cursor: pointer;
+    width: 100%;
+    padding: 0;
+    text-align: left;
+}
+.card__action {
+    display: block;
+    padding: 10px;
+    font-size: 12px;
+    opacity: 0.65;
 }
 
 .poster {
@@ -334,6 +371,7 @@ body {
 
 .movieCard {
     width: 160px;
+    position: relative;
     border: 1px solid rgba(255,255,255,0.10);
     background: rgba(255,255,255,0.05);
     border-radius: 16px;
@@ -347,8 +385,18 @@ body {
     background: rgba(255,255,255,0.08);
 }
 .movieCard.is-wished {
-    border: 1px solid rgba(255,42,109,0.7);
-    box-shadow: 0 0 0 2px rgba(255,42,109,0.15) inset;
+    border: 1px solid rgba(255,42,109,0.8);
+    box-shadow: 0 0 0 2px rgba(255,42,109,0.35) inset, 0 10px 20px rgba(255, 42, 109, 0.25);
+    background: linear-gradient(145deg, rgba(255, 42, 109, 0.18), rgba(120, 80, 255, 0.18));
+}
+.movieCard.is-wished::after {
+    content: "★";
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    color: #ffd54f;
+    font-size: 14px;
+    text-shadow: 0 0 8px rgba(0,0,0,0.5);
 }
 
 .movieCard__poster { aspect-ratio: 2 / 3; background: rgba(255,255,255,0.06); }
@@ -365,9 +413,56 @@ body {
     align-items: center;
     justify-content: space-between;
 }
+.popular__sub {
+    margin: 6px 0 0;
+    opacity: 0.75;
+    font-size: 14px;
+}
 .popular__actions {
     display: flex;
     gap: 8px;
+}
+
+.popular__tableWrapper {
+    margin-top: 18px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    overflow-x: auto;
+}
+.popular__table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.popular__table th,
+.popular__table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 14px;
+}
+.popular__table th {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(255,255,255,0.7);
+}
+.movieThumb {
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 4px;
+    background: rgba(0,0,0,0.35);
+    cursor: pointer;
+}
+.movieThumb img {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+}
+.movieThumb.is-wished {
+    border-color: rgba(255,42,109,0.8);
 }
 
 .pager {
@@ -376,6 +471,9 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px;
+}
+.pager__page {
+    font-weight: 700;
 }
 
 .toTop {
@@ -403,4 +501,37 @@ body {
     border: 1px solid rgba(255,255,255,0.15);
     background: rgba(255,255,255,0.05);
     color: #fff;
+}
+.search__history {
+    margin-top: 8px;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+}
+.search__historyHead {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    opacity: 0.8;
+}
+.search__historyList {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+.chip {
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    background: transparent;
+    padding: 4px 12px;
+    font-size: 13px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.chip:hover {
+    background: rgba(255,255,255,0.08);
 }

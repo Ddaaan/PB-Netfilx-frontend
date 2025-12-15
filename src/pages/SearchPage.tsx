@@ -4,15 +4,30 @@ import { posterUrl, tmdb } from "../api/tmdb";
 import type { TmdbMovie } from "../api/tmdb";
 import { tmdbExtra, type Genre } from "../api/tmdb";
 import { useWishlist } from "../hooks/useWishlist";
+import { storage } from "../utils/storage";
+
+type SortOption = "popularity" | "vote" | "release";
+
+type SearchPreset = {
+    query: string;
+    genreId: number | "";
+    minVote: number;
+    sortBy: SortOption;
+};
+
+const HISTORY_KEY = "searchHistory";
+const HISTORY_LIMIT = 5;
 
 export default function SearchPage() {
     const [query, setQuery] = useState("");
     const [genres, setGenres] = useState<Genre[]>([]);
     const [genreId, setGenreId] = useState<number | "">("");
     const [minVote, setMinVote] = useState<number>(0);
+    const [sortBy, setSortBy] = useState<SortOption>("popularity");
 
     const [items, setItems] = useState<TmdbMovie[]>([]);
     const [loading, setLoading] = useState(false);
+    const [history, setHistory] = useState<SearchPreset[]>(() => storage.get<SearchPreset[]>(HISTORY_KEY, []));
 
     const { isWished, toggle } = useWishlist();
 
@@ -23,21 +38,38 @@ export default function SearchPage() {
     }, []);
 
     const search = async () => {
-        if (!query.trim()) {
+        const text = query.trim();
+        if (!text) {
             toast("검색어를 입력하세요");
             return;
         }
         try {
             setLoading(true);
-            const res = await tmdb.search(query, 1);
-            let list = res.results;
+            const res = await tmdb.search(text, 1);
+            let list = res.results.slice();
 
             if (genreId) {
                 list = list.filter((m) => m.genre_ids?.includes(genreId));
             }
             list = list.filter((m) => (m.vote_average ?? 0) >= minVote);
 
+            list.sort((a, b) => {
+                if (sortBy === "vote") return (b.vote_average ?? 0) - (a.vote_average ?? 0);
+                if (sortBy === "release") {
+                    return (b.release_date ?? "").localeCompare(a.release_date ?? "");
+                }
+                return (b.popularity ?? 0) - (a.popularity ?? 0);
+            });
+
             setItems(list);
+
+            const preset: SearchPreset = { query: text, genreId, minVote, sortBy };
+            setHistory((prev) => {
+                const filtered = prev.filter((p) => p.query !== preset.query);
+                const next = [preset, ...filtered].slice(0, HISTORY_LIMIT);
+                storage.set(HISTORY_KEY, next);
+                return next;
+            });
         } catch (e: any) {
             toast.error(e?.message || "검색 실패");
         } finally {
@@ -50,11 +82,47 @@ export default function SearchPage() {
         setGenreId("");
         setMinVote(0);
         setItems([]);
+        setSortBy("popularity");
+    };
+
+    const loadPreset = (preset: SearchPreset) => {
+        setQuery(preset.query);
+        setGenreId(preset.genreId);
+        setMinVote(preset.minVote);
+        setSortBy(preset.sortBy);
+        toast("이전에 검색한 조건을 불러왔어요.");
+    };
+
+    const clearHistory = () => {
+        setHistory([]);
+        storage.remove(HISTORY_KEY);
     };
 
     return (
         <div>
             <h1>찾아보기</h1>
+            {history.length > 0 && (
+                <div className="search__history">
+                    <div className="search__historyHead">
+                        <span>최근 검색</span>
+                        <button className="link" type="button" onClick={clearHistory}>
+                            전체지우기
+                        </button>
+                    </div>
+                    <div className="search__historyList">
+                        {history.map((preset) => (
+                            <button
+                                key={`${preset.query}-${preset.genreId}-${preset.minVote}-${preset.sortBy}`}
+                                className="chip"
+                                type="button"
+                                onClick={() => loadPreset(preset)}
+                            >
+                                {preset.query}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Filters */}
             <div className="search__filters">
@@ -78,8 +146,14 @@ export default function SearchPage() {
                     <option value={8}>8점 이상</option>
                 </select>
 
-                <button className="btn btn--primary" onClick={search}>검색</button>
-                <button className="btn" onClick={reset}>초기화</button>
+                <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)}>
+                    <option value="popularity">인기순</option>
+                    <option value="vote">평점순</option>
+                    <option value="release">최신 개봉</option>
+                </select>
+
+                <button className="btn btn--primary" type="button" onClick={search}>검색</button>
+                <button className="btn" type="button" onClick={reset}>초기화</button>
             </div>
 
             {loading && <p style={{ opacity: 0.7 }}>Loading...</p>}
