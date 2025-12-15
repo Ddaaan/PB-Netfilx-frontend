@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { FaArrowUp, FaSpinner, FaStream, FaTable } from "react-icons/fa";
 import { posterUrl, tmdb } from "../api/tmdb";
 import type { TmdbMovie } from "../api/tmdb";
 import { useWishlist } from "../hooks/useWishlist";
@@ -83,14 +84,16 @@ export default function PopularPage() {
                         className={`btn ${mode === "table" ? "btn--primary" : ""}`}
                         onClick={() => setMode("table")}
                     >
-                        Table View
+                        <FaTable />
+                        <span>Table View</span>
                     </button>
                     <button
                         type="button"
                         className={`btn ${mode === "infinite" ? "btn--primary" : ""}`}
                         onClick={() => setMode("infinite")}
                     >
-                        Infinite Scroll
+                        <FaStream />
+                        <span>Infinite Scroll</span>
                     </button>
                 </div>
             </div>
@@ -188,10 +191,14 @@ export default function PopularPage() {
                         })}
                     </div>
 
-                    {loading && <p style={{ opacity: 0.7, marginTop: 12 }}>Loading...</p>}
+                    {loading && (
+                        <p className="popular__loading">
+                            <FaSpinner className="icon-spin" /> Loading...
+                        </p>
+                    )}
                     <div ref={sentinelRef} />
                     <button className="toTop" type="button" onClick={goTop}>
-                        Top
+                        <FaArrowUp />
                     </button>
                 </>
             )}

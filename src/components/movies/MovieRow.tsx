@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { FaSpinner } from "react-icons/fa";
 import { posterUrl } from "../../api/tmdb";
 import type { TmdbMovie } from "../../api/tmdb";
 import { useWishlist } from "../../hooks/useWishlist";
@@ -39,7 +40,11 @@ export default function MovieRow({ title, fetcher }: Props) {
         <section className="row">
             <div className="row__head">
                 <h2 className="row__title">{title}</h2>
-                {loading && <span className="row__loading">Loading...</span>}
+                {loading && (
+                    <span className="row__loading">
+                        <FaSpinner className="icon-spin" /> 불러오는 중
+                    </span>
+                )}
             </div>
 
             <div className="row__list">

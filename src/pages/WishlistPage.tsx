@@ -1,3 +1,4 @@
+import { FaHeart, FaHeartBroken, FaTrashAlt } from "react-icons/fa";
 import { useWishlist } from "../hooks/useWishlist";
 
 export default function WishlistPage() {
@@ -5,17 +6,22 @@ export default function WishlistPage() {
 
     return (
         <div>
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
-                <h1>내가 찜한 리스트</h1>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+                <h1 className="page__title">
+                    <FaHeart />
+                    <span>내가 찜한 리스트</span>
+                </h1>
                 <div style={{ display: "flex", gap: 8 }}>
-                    <button className="btn" type="button" onClick={clear} disabled={items.length === 0}>
-                        전체 삭제
+                    <button className="btn btn--ghost" type="button" onClick={clear} disabled={items.length === 0}>
+                        <FaTrashAlt /> 전체 삭제
                     </button>
                 </div>
             </div>
 
             {items.length === 0 ? (
-                <p style={{ opacity: 0.7 }}>아직 찜한 영화가 없습니다.</p>
+                <p className="wishlist__empty">
+                    <FaHeartBroken /> 아직 찜한 영화가 없습니다.
+                </p>
             ) : (
                 <div className="grid">
                     {items.map((m) => (
