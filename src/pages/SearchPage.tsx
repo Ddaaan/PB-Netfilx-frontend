@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { FaFilter, FaHistory, FaRedo, FaSearch, FaSpinner } from "react-icons/fa";
 import { posterUrl, tmdb } from "../api/tmdb";
 import type { TmdbMovie } from "../api/tmdb";
 import { tmdbExtra, type Genre } from "../api/tmdb";
@@ -100,11 +101,16 @@ export default function SearchPage() {
 
     return (
         <div>
-            <h1>찾아보기</h1>
+            <h1 className="page__title">
+                <FaSearch />
+                <span>찾아보기</span>
+            </h1>
             {history.length > 0 && (
                 <div className="search__history">
                     <div className="search__historyHead">
-                        <span>최근 검색</span>
+                        <span>
+                            <FaHistory /> 최근 검색
+                        </span>
                         <button className="link" type="button" onClick={clearHistory}>
                             전체지우기
                         </button>
@@ -126,6 +132,10 @@ export default function SearchPage() {
 
             {/* Filters */}
             <div className="search__filters">
+                <div className="search__filtersHead">
+                    <FaFilter />
+                    <span>필터 옵션</span>
+                </div>
                 <div className="search__inputs">
                     <input
                         placeholder="영화 제목 검색"
@@ -156,12 +166,20 @@ export default function SearchPage() {
                 </div>
 
                 <div className="search__actions">
-                    <button className="btn btn--ghost" type="button" onClick={reset}>초기화</button>
-                    <button className="btn btn--primary" type="button" onClick={search}>검색</button>
+                    <button className="btn btn--ghost" type="button" onClick={reset}>
+                        <FaRedo /> 초기화
+                    </button>
+                    <button className="btn btn--primary" type="button" onClick={search}>
+                        <FaSearch /> 검색
+                    </button>
                 </div>
             </div>
 
-            {loading && <p style={{ opacity: 0.7 }}>Loading...</p>}
+            {loading && (
+                <p className="search__loading">
+                    <FaSpinner className="icon-spin" /> Loading...
+                </p>
+            )}
 
             <div className="grid">
                 {items.map((m) => {
