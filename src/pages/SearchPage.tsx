@@ -126,34 +126,39 @@ export default function SearchPage() {
 
             {/* Filters */}
             <div className="search__filters">
-                <input
-                    placeholder="영화 제목 검색"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                />
+                <div className="search__inputs">
+                    <input
+                        placeholder="영화 제목 검색"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <div className="search__selects">
+                        <select value={genreId} onChange={(e) => setGenreId(Number(e.target.value) || "")}>
+                            <option value="">전체 장르</option>
+                            {genres.map((g) => (
+                                <option key={g.id} value={g.id}>{g.name}</option>
+                            ))}
+                        </select>
 
-                <select value={genreId} onChange={(e) => setGenreId(Number(e.target.value) || "")}>
-                    <option value="">전체 장르</option>
-                    {genres.map((g) => (
-                        <option key={g.id} value={g.id}>{g.name}</option>
-                    ))}
-                </select>
+                        <select value={minVote} onChange={(e) => setMinVote(Number(e.target.value))}>
+                            <option value={0}>전체 평점</option>
+                            <option value={5}>5점 이상</option>
+                            <option value={7}>7점 이상</option>
+                            <option value={8}>8점 이상</option>
+                        </select>
 
-                <select value={minVote} onChange={(e) => setMinVote(Number(e.target.value))}>
-                    <option value={0}>전체 평점</option>
-                    <option value={5}>5점 이상</option>
-                    <option value={7}>7점 이상</option>
-                    <option value={8}>8점 이상</option>
-                </select>
+                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)}>
+                            <option value="popularity">인기순</option>
+                            <option value="vote">평점순</option>
+                            <option value="release">최신 개봉</option>
+                        </select>
+                    </div>
+                </div>
 
-                <select value={sortBy} onChange={(e) => setSortBy(e.target.value as SortOption)}>
-                    <option value="popularity">인기순</option>
-                    <option value="vote">평점순</option>
-                    <option value="release">최신 개봉</option>
-                </select>
-
-                <button className="btn btn--primary" type="button" onClick={search}>검색</button>
-                <button className="btn" type="button" onClick={reset}>초기화</button>
+                <div className="search__actions">
+                    <button className="btn btn--ghost" type="button" onClick={reset}>초기화</button>
+                    <button className="btn btn--primary" type="button" onClick={search}>검색</button>
+                </div>
             </div>
 
             {loading && <p style={{ opacity: 0.7 }}>Loading...</p>}
