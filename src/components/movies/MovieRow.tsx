@@ -25,7 +25,7 @@ export default function MovieRow({ title, fetcher }: Props) {
                 setMovies(data.results.slice(0, 12));
             })
             .catch((e) => {
-                toast.error(e?.message || "영화 목록을 불러오지 못했습니다.");
+                toast.error(e?.message || "영화 목록을 불러오지 못했어요.");
                 setMovies([]);
             })
             .finally(() => setLoading(false));
@@ -50,6 +50,7 @@ export default function MovieRow({ title, fetcher }: Props) {
 
                     return (
                         <button
+                            type="button"
                             key={id}
                             className={`movieCard ${wished ? "is-wished" : ""}`}
                             onClick={() => {

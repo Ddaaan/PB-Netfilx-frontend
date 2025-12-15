@@ -10,6 +10,8 @@ export type TmdbMovie = {
     backdrop_path: string | null;
     genre_ids?: number[];
     vote_average?: number;
+    release_date?: string;
+    popularity?: number;
 };
 
 export type TmdbListResponse = {
@@ -22,7 +24,7 @@ function getApiKey() {
     return localStorage.getItem("TMDb-Key") || "";
 }
 
-export function posterUrl(path: string | null, size: "w342" | "w500" | "original" = "w342") {
+export function posterUrl(path: string | null, size: "w185" | "w342" | "w500" | "original" = "w342") {
     if (!path) return null;
     return `https://image.tmdb.org/t/p/${size}${path}`;
 }

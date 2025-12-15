@@ -1,15 +1,17 @@
 import { useWishlist } from "../hooks/useWishlist";
 
 export default function WishlistPage() {
-    const { items, clear } = useWishlist();
+    const { items, clear, toggle } = useWishlist();
 
     return (
         <div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
                 <h1>내가 찜한 리스트</h1>
-                <button className="btn" onClick={clear} disabled={items.length === 0}>
-                    전체 삭제
-                </button>
+                <div style={{ display: "flex", gap: 8 }}>
+                    <button className="btn" type="button" onClick={clear} disabled={items.length === 0}>
+                        전체 삭제
+                    </button>
+                </div>
             </div>
 
             {items.length === 0 ? (
@@ -17,7 +19,7 @@ export default function WishlistPage() {
             ) : (
                 <div className="grid">
                     {items.map((m) => (
-                        <div key={m.id} className="card">
+                        <button key={m.id} type="button" className="card card--wishlist" onClick={() => toggle(m)}>
                             <div className="poster">
                                 {m.poster_path ? (
                                     <img src={m.poster_path} alt={m.title} />
@@ -26,7 +28,8 @@ export default function WishlistPage() {
                                 )}
                             </div>
                             <div className="card__title">{m.title}</div>
-                        </div>
+                            <span className="card__action">클릭하면 추천 목록에서 제거됩니다.</span>
+                        </button>
                     ))}
                 </div>
             )}
