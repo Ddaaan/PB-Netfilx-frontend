@@ -7,6 +7,7 @@ import HomePage from "../pages/HomePage";
 import PopularPage from "../pages/PopularPage";
 import SearchPage from "../pages/SearchPage";
 import WishlistPage from "../pages/WishlistPage";
+import ProfilePage from "../pages/ProfilePage";
 
 export function AppRouter() {
     return (
@@ -26,6 +27,7 @@ export function AppRouter() {
                     <Route path="popular" element={<PopularPage />} />
                     <Route path="search" element={<SearchPage />} />
                     <Route path="wishlist" element={<WishlistPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
                 </Route>
 
                 <Route path="*" element={<Navigate to="/" replace />} />

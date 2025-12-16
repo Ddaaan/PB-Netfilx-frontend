@@ -112,18 +112,6 @@ export default function SignInPage() {
                         {mode === "login" ? "처음이신가요? 회원가입을 진행해요." : "이미 계정이 있나요? 로그인해요."}
                     </p>
 
-                    <div className="auth__switch">
-                        {mode === "login" ? (
-                            <button className="btn btn--ghost" type="button" onClick={() => toggleMode("register")}>
-                                회원가입으로 전환
-                            </button>
-                        ) : (
-                            <button className="btn btn--ghost" type="button" onClick={() => toggleMode("login")}>
-                                로그인으로 전환
-                            </button>
-                        )}
-                    </div>
-
                     <div className="auth__tip">
                         <span>TIP</span> 비밀번호는 <b>TMDB API Key</b>로 사용됩니다.
                     </div>
@@ -131,23 +119,6 @@ export default function SignInPage() {
 
                 {/* 폼 패널 */}
                 <section className="auth__panel auth__panel--form">
-                    <div className="auth__tabs">
-                        <button
-                            type="button"
-                            className={`tab ${mode === "login" ? "active" : ""}`}
-                            onClick={() => toggleMode("login")}
-                        >
-                            로그인
-                        </button>
-                        <button
-                            type="button"
-                            className={`tab ${mode === "register" ? "active" : ""}`}
-                            onClick={() => toggleMode("register")}
-                        >
-                            회원가입
-                        </button>
-                    </div>
-
                     <div className="auth__form">
                         <label className="field">
                             <span>이메일</span>
