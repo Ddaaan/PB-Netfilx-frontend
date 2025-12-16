@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa";
 import { posterUrl } from "../../api/tmdb";
 import type { TmdbMovie } from "../../api/tmdb";
+import MovieDetailModal from "./MovieDetailModal";
 import { useWishlist } from "../../hooks/useWishlist";
 
 type Props = {
@@ -13,8 +14,9 @@ type Props = {
 export default function MovieRow({ title, fetcher }: Props) {
     const [movies, setMovies] = useState<TmdbMovie[] | null>(null);
     const [loading, setLoading] = useState(false);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
-    const { isWished, toggle } = useWishlist();
+    const { isWished } = useWishlist();
 
     useEffect(() => {
         let mounted = true;
@@ -60,7 +62,7 @@ export default function MovieRow({ title, fetcher }: Props) {
                             className={`movieCard ${wished ? "is-wished" : ""}`}
                             onClick={() => {
                                 if (!m?.id) return;
-                                toggle({ id: m.id, title: m.title, poster_path: posterUrl(m.poster_path, "w342") });
+                                setSelectedId(m.id);
                             }}
                             title={m?.title || "loading"}
                         >
@@ -75,6 +77,8 @@ export default function MovieRow({ title, fetcher }: Props) {
                     );
                 })}
             </div>
+
+            <MovieDetailModal movieId={selectedId} onClose={() => setSelectedId(null)} />
         </section>
     );
 }
