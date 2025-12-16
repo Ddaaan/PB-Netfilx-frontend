@@ -5,6 +5,7 @@ import { posterUrl, tmdb } from "../api/tmdb";
 import type { TmdbMovie } from "../api/tmdb";
 import { useWishlist } from "../hooks/useWishlist";
 import { useLockScroll } from "../hooks/useLockScroll";
+import MovieDetailModal from "../components/movies/MovieDetailModal";
 
 type ViewMode = "table" | "infinite";
 const TABLE_PAGE_SIZE = 8;
@@ -15,8 +16,9 @@ export default function PopularPage() {
     const [totalPages, setTotalPages] = useState(1);
     const [items, setItems] = useState<TmdbMovie[]>([]);
     const [loading, setLoading] = useState(false);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
-    const { isWished, toggle } = useWishlist();
+    const { isWished } = useWishlist();
     const sentinelRef = useRef<HTMLDivElement | null>(null);
 
     useLockScroll(mode === "table");
@@ -120,13 +122,7 @@ export default function PopularPage() {
                                                 <button
                                                     type="button"
                                                     className={`movieThumb ${isWished(m.id) ? "is-wished" : ""}`}
-                                                    onClick={() =>
-                                                        toggle({
-                                                            id: m.id,
-                                                            title: m.title,
-                                                            poster_path: posterUrl(m.poster_path, "w342"),
-                                                        })
-                                                    }
+                                                    onClick={() => setSelectedId(m.id)}
                                                 >
                                                     {img ? <img src={img} alt={m.title} /> : <span>이미지 없음</span>}
                                                 </button>
@@ -173,9 +169,7 @@ export default function PopularPage() {
                                     type="button"
                                     key={m.id}
                                     className={`movieCard ${isWished(m.id) ? "is-wished" : ""}`}
-                                    onClick={() =>
-                                        toggle({ id: m.id, title: m.title, poster_path: posterUrl(m.poster_path, "w342") })
-                                    }
+                                    onClick={() => setSelectedId(m.id)}
                                 >
                                     <div className="movieCard__poster">
                                         {img ? <img src={img} alt={m.title} /> : <div className="movieCard__empty" />}
@@ -202,6 +196,8 @@ export default function PopularPage() {
                     </button>
                 </>
             )}
+
+            <MovieDetailModal movieId={selectedId} onClose={() => setSelectedId(null)} />
         </div>
     );
 }

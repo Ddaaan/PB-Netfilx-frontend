@@ -6,6 +6,7 @@ import type { TmdbMovie } from "../api/tmdb";
 import { tmdbExtra, type Genre } from "../api/tmdb";
 import { useWishlist } from "../hooks/useWishlist";
 import { storage } from "../utils/storage";
+import MovieDetailModal from "../components/movies/MovieDetailModal";
 
 type SortOption = "popularity" | "vote" | "release";
 
@@ -29,8 +30,9 @@ export default function SearchPage() {
     const [items, setItems] = useState<TmdbMovie[]>([]);
     const [loading, setLoading] = useState(false);
     const [history, setHistory] = useState<SearchPreset[]>(() => storage.get<SearchPreset[]>(HISTORY_KEY, []));
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
-    const { isWished, toggle } = useWishlist();
+    const { isWished } = useWishlist();
 
     useEffect(() => {
         tmdbExtra.genres().then(setGenres).catch(() => {
@@ -188,9 +190,7 @@ export default function SearchPage() {
                         <button
                             key={m.id}
                             className={`movieCard ${isWished(m.id) ? "is-wished" : ""}`}
-                            onClick={() =>
-                                toggle({ id: m.id, title: m.title, poster_path: posterUrl(m.poster_path, "w342") })
-                            }
+                            onClick={() => setSelectedId(m.id)}
                         >
                             <div className="movieCard__poster">
                                 {img ? <img src={img} alt={m.title} /> : <div className="movieCard__empty" />}
@@ -202,6 +202,8 @@ export default function SearchPage() {
                     );
                 })}
             </div>
+
+            <MovieDetailModal movieId={selectedId} onClose={() => setSelectedId(null)} />
         </div>
     );
 }

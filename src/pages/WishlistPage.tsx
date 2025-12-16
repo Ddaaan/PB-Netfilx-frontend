@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { FaHeart, FaHeartBroken, FaTrashAlt } from "react-icons/fa";
 import { useWishlist } from "../hooks/useWishlist";
+import MovieDetailModal from "../components/movies/MovieDetailModal";
 
 export default function WishlistPage() {
-    const { items, clear, toggle } = useWishlist();
+    const { items, clear } = useWishlist();
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
     return (
         <div>
@@ -25,7 +28,7 @@ export default function WishlistPage() {
             ) : (
                 <div className="grid">
                     {items.map((m) => (
-                        <button key={m.id} type="button" className="card card--wishlist" onClick={() => toggle(m)}>
+                        <button key={m.id} type="button" className="card card--wishlist" onClick={() => setSelectedId(m.id)}>
                             <div className="poster">
                                 {m.poster_path ? (
                                     <img src={m.poster_path} alt={m.title} />
@@ -34,11 +37,13 @@ export default function WishlistPage() {
                                 )}
                             </div>
                             <div className="card__title">{m.title}</div>
-                            <span className="card__action">클릭하면 추천 목록에서 제거됩니다.</span>
+                            <span className="card__action">클릭하면 상세 정보를 확인할 수 있습니다.</span>
                         </button>
                     ))}
                 </div>
             )}
+
+            <MovieDetailModal movieId={selectedId} onClose={() => setSelectedId(null)} />
         </div>
     );
 }

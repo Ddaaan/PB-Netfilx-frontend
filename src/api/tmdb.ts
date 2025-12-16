@@ -2,6 +2,11 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL || "https://api.themoviedb.org/3";
 
+export type Genre = {
+    id: number;
+    name: string;
+};
+
 export type TmdbMovie = {
     id: number;
     title: string;
@@ -12,6 +17,14 @@ export type TmdbMovie = {
     vote_average?: number;
     release_date?: string;
     popularity?: number;
+};
+
+export type TmdbMovieDetail = TmdbMovie & {
+    runtime?: number;
+    genres?: Genre[];
+    tagline?: string;
+    homepage?: string;
+    status?: string;
 };
 
 export type TmdbListResponse = {
@@ -44,14 +57,10 @@ export const tmdb = {
     popular: (page = 1) => get<TmdbListResponse>("/movie/popular", { page }),
     topRated: (page = 1) => get<TmdbListResponse>("/movie/top_rated", { page }),
     upcoming: (page = 1) => get<TmdbListResponse>("/movie/upcoming", { page }),
+    detail: (id: number) => get<TmdbMovieDetail>(`/movie/${id}`),
 
     // (다음 단계에서 사용) 검색
     search: (query: string, page = 1) => get<TmdbListResponse>("/search/movie", { query, page, include_adult: false }),
-};
-
-export type Genre = {
-    id: number;
-    name: string;
 };
 
 export const tmdbExtra = {
