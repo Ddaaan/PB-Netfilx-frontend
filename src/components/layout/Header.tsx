@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { FaFireAlt, FaHeart, FaHome, FaSearch, FaSignOutAlt } from "react-icons/fa";
+import { FaFireAlt, FaHeart, FaHome, FaSearch, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { getLoginUser, logout } from "../../utils/auth.tsx";
 
 export default function Header() {
@@ -44,6 +44,10 @@ export default function Header() {
                     <NavLink to="/wishlist" className={({ isActive }) => (isActive ? "nav__item active" : "nav__item")}>
                         <FaHeart />
                         <span>내가 찜한 리스트</span>
+                    </NavLink>
+                    <NavLink to="/profile" className={({ isActive }) => (isActive ? "nav__item active" : "nav__item")}>
+                        <FaUser />
+                        <span>프로필</span>
                     </NavLink>
                 </nav>
             </div>
